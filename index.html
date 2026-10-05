@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIKE — COLLAGE SHOWCASE / A Scroll-Driven WebGL Experience</title>
+<meta name="description" content="A scroll-driven WebGL collage showcase of Nike clothing. Display only — nothing here is for sale.">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-dark is-loading">
+
+<!-- ===== INTRO LOADER ===== -->
+<div id="loader" aria-hidden="true">
+  <div class="loader-inner">
+    <div class="loader-logo">
+      <svg viewBox="0 0 1000 356.39" class="swoosh" aria-hidden="true"><path d="M245.8075 717.62406c-29.79588-1.1837-54.1734-9.3368-73.23459-24.4796-3.63775-2.8928-12.30611-11.5663-15.21427-15.2245-7.72958-9.7193-12.98467-19.1785-16.48977-29.6734-10.7857-32.3061-5.23469-74.6989 15.87753-121.2243 18.0765-39.8316 45.96932-79.3366 94.63252-134.0508 7.16836-8.0511 28.51526-31.5969 28.65302-31.5969.051 0-1.11225 2.0153-2.57652 4.4694-12.65304 21.1938-23.47957 46.158-29.37751 67.7703-9.47448 34.6785-8.33163 64.4387 3.34693 87.5151 8.05611 15.898 21.86731 29.6684 37.3979 37.2806 27.18874 13.3214 66.9948 14.4235 115.60699 3.2245 3.34694-.7755 169.19363-44.801 368.55048-97.8366 199.35686-53.0408 362.49439-96.4029 362.51989-96.3672.056.046-463.16259 198.2599-703.62654 301.0914-38.08158 16.2806-48.26521 20.3928-66.16827 26.6785-45.76525 16.0714-86.76008 23.7398-119.89779 22.4235z"/></svg>
+    </div>
+    <div class="loader-bar"><i></i></div>
+    <div class="loader-meta">
+      <span>COLLAGE&nbsp;SHOWCASE</span>
+      <span class="loader-pct">00</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== WEBGL LAYERS ===== -->
+<canvas id="gl-bg" aria-hidden="true"></canvas>
+<canvas id="gl-fx" aria-hidden="true"></canvas>
+
+<!-- ===== SCROLL PROGRESS ===== -->
+<div class="progress" aria-hidden="true"><i id="progress-bar"></i></div>
+
+<!-- ===== NAV ===== -->
+<header class="nav">
+  <a class="nav-brand" href="#top" data-cursor="hover">
+    <svg viewBox="0 0 1000 356.39" class="swoosh" aria-hidden="true"><path d="M245.8075 717.62406c-29.79588-1.1837-54.1734-9.3368-73.23459-24.4796-3.63775-2.8928-12.30611-11.5663-15.21427-15.2245-7.72958-9.7193-12.98467-19.1785-16.48977-29.6734-10.7857-32.3061-5.23469-74.6989 15.87753-121.2243 18.0765-39.8316 45.96932-79.3366 94.63252-134.0508 7.16836-8.0511 28.51526-31.5969 28.65302-31.5969.051 0-1.11225 2.0153-2.57652 4.4694-12.65304 21.1938-23.47957 46.158-29.37751 67.7703-9.47448 34.6785-8.33163 64.4387 3.34693 87.5151 8.05611 15.898 21.86731 29.6684 37.3979 37.2806 27.18874 13.3214 66.9948 14.4235 115.60699 3.2245 3.34694-.7755 169.19363-44.801 368.55048-97.8366 199.35686-53.0408 362.49439-96.4029 362.51989-96.3672.056.046-463.16259 198.2599-703.62654 301.0914-38.08158 16.2806-48.26521 20.3928-66.16827 26.6785-45.76525 16.0714-86.76008 23.7398-119.89779 22.4235z"/></svg>
+    <span class="nav-brand-txt">COLLAGE<em>SHOWCASE</em></span>
+  </a>
+  <nav class="nav-links" aria-label="Sections">
+    <a href="#manifesto" data-cursor="hover"><i>01</i>MANIFESTO</a>
+    <a href="#fits" data-cursor="hover"><i>02</i>FITS</a>
+    <a href="#motion" data-cursor="hover"><i>03</i>MOTION</a>
+    <a href="#archive" data-cursor="hover"><i>04</i>ARCHIVE</a>
+    <a href="#lookbook" data-cursor="hover"><i>05</i>LOOKBOOK</a>
+  </nav>
+  <div class="nav-meta">
+    <span class="nav-issue">SS26 / VOL.01</span>
+    <span class="nav-theme" id="theme-chip"><i></i><b>DARK</b></span>
+  </div>
+</header>
+
+<!-- ===== HUD ===== -->
+<div class="hud" aria-hidden="true">
+  <div class="hud-index"><span id="hud-num">00</span><span class="hud-sep">/</span><span id="hud-total">07</span></div>
+  <div class="hud-label" id="hud-label">COVER</div>
+</div>
+
+<main id="top">
+
+  <!-- ===================== COVER ===================== -->
+  <section class="sec sec-cover" id="cover" data-hud="00" data-hud-label="COVER">
+    <div class="cover-grid">
+
+      <div class="cover-type">
+        <div class="eyebrow reveal"><span class="tape-dot"></span>COLLAGE CUTS — ISSUE 01 / DISPLAY ONLY</div>
+
+        <h1 class="giant" aria-label="Nike Showcase">
+          <span class="giant-line reveal"><span class="giant-fill">NIKE</span></span>
+          <span class="giant-line reveal"><span class="giant-outline">SHOWCASE</span></span>
+        </h1>
+
+        <div class="cover-foot reveal">
+          <p class="cover-blurb">
+            A scroll-driven collage of the pieces that moved the culture —
+            cut, taped and pinned across a WebGL canvas.
+            <b>Nothing here is for sale.</b>
+          </p>
+          <div class="cover-tags">
+            <span class="tag">EST. 1964</span>
+            <span class="tag tag-hot">NO&nbsp;CHECKOUT</span>
+            <span class="tag">WEBGL&nbsp;/&nbsp;NO&nbsp;3D</span>
+          </div>
+        </div>
+      </div>
+
+      <figure class="cover-shot" data-speed="-0.14">
+        <div class="cut cut-tear1 frame-polaroid">
+          <img src="assets/img/hero-garage.jpg" alt="Streetwear figure in a parking garage" loading="eager">
+        </div>
+        <span class="tape tape-tl"></span>
+        <span class="tape tape-br"></span>
+        <figcaption class="scribble scribble-right">scroll,<br>it reacts ↴</figcaption>
+        <div class="stamp stamp-round">DISPLAY · ONLY · NOT · FOR · SALE ·&nbsp;</div>
+      </figure>
+
+      <div class="cover-code" aria-hidden="true">
+        <div class="barcode"></div>
+        <span>N.0001—SS26</span>
+      </div>
+    </div>
+
+    <div class="marquee marquee-dark" aria-hidden="true">
+      <div class="marquee-track">
+        <span>SCROLL TO EXPLORE ✷ NOT FOR SALE ✷ COLLAGE SHOWCASE ✷ VOL.01 ✷ DARK → DAYLIGHT ✷&nbsp;</span>
+        <span>SCROLL TO EXPLORE ✷ NOT FOR SALE ✷ COLLAGE SHOWCASE ✷ VOL.01 ✷ DARK → DAYLIGHT ✷&nbsp;</span>
+        <span>SCROLL TO EXPLORE ✷ NOT FOR SALE ✷ COLLAGE SHOWCASE ✷ VOL.01 ✷ DARK → DAYLIGHT ✷&nbsp;</span>
+      </div>
+    </div>
+
+    <div class="scroll-cue" aria-hidden="true"><i></i><span>SCROLL</span></div>
+  </section>
+
+  <!-- ===================== MANIFESTO ===================== -->
+  <section class="sec sec-manifesto" id="manifesto" data-hud="01" data-hud-label="MANIFESTO">
+    <div class="sec-head reveal">
+      <span class="sec-num">01</span>
+      <span class="sec-name">MANIFESTO</span>
+      <span class="sec-rule"></span>
+      <span class="sec-note">READ ON SCROLL</span>
+    </div>
+
+    <div class="manifesto-wrap">
+      <p class="manifesto" id="manifesto-text">
+        WE DON'T SELL. WE PIN PIECES TO A WALL LIKE MAGAZINE CUT-OUTS —
+        A HOODIE HERE, A SWOOSH THERE — AND LET THE PAGE DO THE WALKING.
+        NO CARTS. NO CHECKOUT. JUST CLOTHES, GRAIN AND TAPE.
+      </p>
+    </div>
+
+    <div class="manifesto-side reveal" aria-hidden="true">
+      <div class="note-card">
+        <span class="note-ttl">FILE&nbsp;NOTE</span>
+        everything on this page is a<br>visual study — fan-made,<br>non-commercial, unaffiliated.
+        <span class="note-sign">— studio 01</span>
+      </div>
+      <div class="mini-cut cut cut-tear2">
+        <img src="assets/img/hoodie-detail.jpg" alt="Hoodie drawcord detail" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FITS ===================== -->
+  <section class="sec sec-fits" id="fits" data-hud="02" data-hud-label="THE FITS">
+    <div class="sec-head reveal">
+      <span class="sec-num">02</span>
+      <span class="sec-name">THE FITS</span>
+      <span class="sec-rule"></span>
+      <span class="sec-note">05 DISPLAY PIECES</span>
+    </div>
+
+    <!-- piece 01 -->
+    <article class="piece piece-l reveal-group">
+      <div class="piece-media" data-speed="0.08">
+        <div class="cut cut-tear2">
+          <img src="assets/img/hoodie-grey.jpg" alt="Grey hoodie close up" loading="lazy">
+        </div>
+        <span class="tape tape-tr"></span>
+        <span class="piece-idx" aria-hidden="true">01</span>
+      </div>
+      <div class="piece-info">
+        <span class="piece-kicker">HEAVY FLEECE / 480 GSM</span>
+        <h3 class="piece-name">ACG<br>TERMINAL HOODIE</h3>
+        <ul class="spec">
+          <li><span>COLOR</span><b>HEATHER GREY</b></li>
+          <li><span>MATERIAL</span><b>BRUSHED FLEECE</b></li>
+          <li><span>SEASON</span><b>FALL / SS26</b></li>
+        </ul>
+        <span class="stamp stamp-flat">DISPLAY PIECE — NOT FOR SALE</span>
+      </div>
+    </article>
+
+    <!-- piece 02 -->
+    <article class="piece piece-r reveal-group">
+      <div class="piece-media" data-speed="-0.06">
+        <div class="cut cut-tear3">
+          <img src="assets/img/windbreaker-red.jpg" alt="Red windbreaker jacket" loading="lazy">
+        </div>
+        <span class="tape tape-tl rotate-l"></span>
+        <span class="piece-idx" aria-hidden="true">02</span>
+      </div>
+      <div class="piece-info">
+        <span class="piece-kicker">SHELL / WATER REPELLENT</span>
+        <h3 class="piece-name">WINDRUNNER<br>SHELL</h3>
+        <ul class="spec">
+          <li><span>COLOR</span><b>UNIVERSITY RED</b></li>
+          <li><span>MATERIAL</span><b>NYLON RIPSTOP</b></li>
+          <li><span>SEASON</span><b>TRANSITIONAL</b></li>
+        </ul>
+        <span class="stamp stamp-flat">DISPLAY PIECE — NOT FOR SALE</span>
+      </div>
+    </article>
+
+    <!-- piece 03 -->
+    <article class="piece piece-l piece-focus reveal-group">
+      <div class="piece-media" data-speed="0.1">
+        <div class="cut cut-tear1">
+          <img src="assets/img/sneaker-white.jpg" alt="White sneakers with branded socks" loading="lazy">
+        </div>
+        <span class="tape tape-br rotate-r"></span>
+        <span class="piece-idx" aria-hidden="true">03</span>
+      </div>
+      <div class="piece-info">
+        <span class="piece-kicker">LEATHER / LEGENDARY</span>
+        <h3 class="piece-name">AIR FORCE 1<br><em>'07</em></h3>
+        <ul class="spec">
+          <li><span>COLOR</span><b>TRIPLE WHITE</b></li>
+          <li><span>MATERIAL</span><b>LEATHER UPPER</b></li>
+          <li><span>BORN</span><b>1982</b></li>
+        </ul>
+        <span class="stamp stamp-flat">DISPLAY PIECE — NOT FOR SALE</span>
+      </div>
+    </article>
+
+    <!-- piece 04 -->
+    <article class="piece piece-r reveal-group">
+      <div class="piece-media" data-speed="-0.08">
+        <div class="cut cut-tear4">
+          <img src="assets/img/joggers-red.jpg" alt="Red trousers on white" loading="lazy">
+        </div>
+        <span class="tape tape-tl"></span>
+        <span class="piece-idx" aria-hidden="true">04</span>
+      </div>
+      <div class="piece-info">
+        <span class="piece-kicker">WOVEN / ARTICULATED</span>
+        <h3 class="piece-name">ACG<br>WOVEN PANT</h3>
+        <ul class="spec">
+          <li><span>COLOR</span><b>CRIMSON</b></li>
+          <li><span>MATERIAL</span><b>WOVEN NYLON</b></li>
+          <li><span>POCKETS</span><b>SIX</b></li>
+        </ul>
+        <span class="stamp stamp-flat">DISPLAY PIECE — NOT FOR SALE</span>
+      </div>
+    </article>
+
+    <!-- piece 05 -->
+    <article class="piece piece-l reveal-group">
+      <div class="piece-media" data-speed="0.07">
+        <div class="cut cut-tear2">
+          <img src="assets/img/sneaker-brown.jpg" alt="Trail running shoes" loading="lazy">
+        </div>
+        <span class="tape tape-tr rotate-r"></span>
+        <span class="piece-idx" aria-hidden="true">05</span>
+      </div>
+      <div class="piece-info">
+        <span class="piece-kicker">TRAIL / ALL TERRAIN</span>
+        <h3 class="piece-name">PEGASUS<br>TRAIL</h3>
+        <ul class="spec">
+          <li><span>COLOR</span><b>EARTH / SAIL</b></li>
+          <li><span>MATERIAL</span><b>MESH KNIT</b></li>
+          <li><span>DROP</span><b>8 MM</b></li>
+        </ul>
+        <span class="stamp stamp-flat">DISPLAY PIECE — NOT FOR SALE</span>
+      </div>
+    </article>
+  </section>
+
+  <!-- ===================== MOTION (horizontal strip) ===================== -->
+  <section class="sec sec-motion" id="motion" data-hud="03" data-hud-label="MOTION">
+    <div class="motion-sticky">
+      <div class="sec-head sec-head-overlay">
+        <span class="sec-num">03</span>
+        <span class="sec-name">MOTION</span>
+        <span class="sec-rule"></span>
+        <span class="sec-note">KEEP SCROLLING →</span>
+      </div>
+
+      <div class="strip" id="strip-track">
+        <figure class="strip-item">
+          <div class="cut cut-tear1"><img src="assets/img/editorial-fly.jpg" alt="Editorial fabric in motion" loading="lazy"></div>
+          <figcaption><b>01</b> CLOTH IN WIND — STUDY</figcaption>
+        </figure>
+        <figure class="strip-item strip-item-tall">
+          <div class="cut cut-tear3"><img src="assets/img/street-group.jpg" alt="Group street portrait" loading="lazy"></div>
+          <figcaption><b>02</b> THE CREW — LOOKBOOK</figcaption>
+        </figure>
+        <figure class="strip-item">
+          <div class="cut cut-tear2"><img src="assets/img/tennis.jpg" alt="Tennis player lunging" loading="lazy"></div>
+          <figcaption><b>03</b> COURT ENERGY</figcaption>
+        </figure>
+        <figure class="strip-item strip-item-tall">
+          <div class="cut cut-tear4"><img src="assets/img/sport-fence.jpg" alt="Sportswear against a fence" loading="lazy"></div>
+          <figcaption><b>04</b> FENCE LINE — SS26</figcaption>
+        </figure>
+        <figure class="strip-item">
+          <div class="cut cut-tear1"><img src="assets/img/leather-jacket.jpg" alt="Leather jacket portrait" loading="lazy"></div>
+          <figcaption><b>05</b> NIGHT PORTRAIT</figcaption>
+        </figure>
+        <div class="strip-end" aria-hidden="true">
+          <span class="strip-end-txt">KEEP<br>GOING</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== THE SHIFT (dark → light wipe) ===================== -->
+  <section class="sec sec-shift" id="shift" data-hud="04" data-hud-label="THE SHIFT">
+    <div class="shift-sticky">
+      <div class="shift-type" aria-hidden="true">
+        <span class="shift-line shift-line-a">FROM DARK</span>
+        <span class="shift-line shift-line-b">TO DAYLIGHT</span>
+      </div>
+      <p class="shift-note reveal">the canvas bleeds from black to paper as you pull the page down ↓</p>
+      <div class="shift-meter" aria-hidden="true"><i id="shift-meter"></i></div>
+    </div>
+  </section>
+
+  <!-- ===================== ARCHIVE ===================== -->
+  <section class="sec sec-archive" id="archive" data-hud="05" data-hud-label="ARCHIVE">
+    <div class="sec-head reveal">
+      <span class="sec-num">04</span>
+      <span class="sec-name">ARCHIVE</span>
+      <span class="sec-rule"></span>
+      <span class="sec-note">CLIPPINGS 1964 → NOW</span>
+    </div>
+
+    <div class="archive-grid">
+      <div class="archive-cut reveal" data-speed="0.06">
+        <div class="cut cut-tear3 halftone">
+          <img src="assets/img/steps-white.jpg" alt="Sitting on steps in white sneakers" loading="lazy">
+        </div>
+        <span class="tape tape-tl"></span>
+        <span class="caption-hand">pin here ↗</span>
+      </div>
+
+      <div class="archive-list">
+        <div class="arc reveal"><b>1964</b><span>BLUE RIBBON SPORTS — A TRACK COACH, A Waffle Iron, A BETTER SHOE.</span></div>
+        <div class="arc reveal"><b>1971</b><span>THE SWOOSH ARRIVES. ONE STROKE, STILL MOVING.</span></div>
+        <div class="arc reveal"><b>1985</b><span>THE FIRST JUMP — BASKETBALL TAKES THE STREET.</span></div>
+        <div class="arc reveal"><b>TODAY</b><span>THE SAME RULE: CLOTHES BUILT FOR MOTION, PINNED HERE FOR SHOW.</span></div>
+      </div>
+
+      <div class="archive-stats reveal">
+        <div class="stat"><b>03</b><span>PARTS PER STORY<br>CUT / TAPE / PIN</span></div>
+        <div class="stat"><b>00</b><span>PRODUCTS<br>FOR SALE</span></div>
+        <div class="stat"><b>01</b><span>SWOOSH<br>THAT NEVER STOPS</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== LOOKBOOK ===================== -->
+  <section class="sec sec-lookbook" id="lookbook" data-hud="06" data-hud-label="LOOKBOOK">
+    <div class="sec-head reveal">
+      <span class="sec-num">05</span>
+      <span class="sec-name">LOOKBOOK</span>
+      <span class="sec-rule"></span>
+      <span class="sec-note">PINNED WALL</span>
+    </div>
+
+    <div class="wall">
+      <figure class="wall-item w1" data-speed="0.05">
+        <div class="cut cut-tear2"><img src="assets/img/bomber-green.jpg" alt="Green bomber jacket" loading="lazy"></div>
+        <span class="tape tape-tl"></span><figcaption>OLIVE BOMBER / CUT 06</figcaption>
+      </figure>
+      <figure class="wall-item w2" data-speed="-0.07">
+        <div class="cut cut-tear1"><img src="assets/img/hoodie-white.jpg" alt="White hoodie portrait" loading="lazy"></div>
+        <span class="tape tape-tr rotate-r"></span><figcaption>WHITE-OUT HOOD / CUT 07</figcaption>
+      </figure>
+      <figure class="wall-item w3" data-speed="0.09">
+        <div class="cut cut-tear4"><img src="assets/img/beanie-overalls.jpg" alt="Street style with beanie" loading="lazy"></div>
+        <span class="tape tape-bl"></span><figcaption>DENIM + BEANIE / CUT 08</figcaption>
+      </figure>
+      <figure class="wall-item w4" data-speed="-0.05">
+        <div class="cut cut-tear3"><img src="assets/img/activewear-black.jpg" alt="Black activewear portrait" loading="lazy"></div>
+        <span class="tape tape-tl rotate-l"></span><figcaption>BLACK-OUT SET / CUT 09</figcaption>
+      </figure>
+      <div class="wall-note reveal" aria-hidden="true">
+        <span class="marker">the wall<br>gets lighter<br>as you go ↓</span>
+        <div class="barcode barcode-dark"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== OUTRO ===================== -->
+  <section class="sec sec-outro" id="outro" data-hud="07" data-hud-label="JUST DO IT">
+    <div class="outro-type reveal">
+      <span class="outro-small">THAT'S THE WALL. THAT'S THE SHOW.</span>
+      <h2 class="outro-giant"><span>JUST</span> <span class="outline">DO</span> <span>IT.</span></h2>
+    </div>
+
+    <footer class="foot">
+      <div class="foot-top">
+        <svg viewBox="0 0 1000 356.39" class="swoosh foot-swoosh" aria-hidden="true"><path d="M245.8075 717.62406c-29.79588-1.1837-54.1734-9.3368-73.23459-24.4796-3.63775-2.8928-12.30611-11.5663-15.21427-15.2245-7.72958-9.7193-12.98467-19.1785-16.48977-29.6734-10.7857-32.3061-5.23469-74.6989 15.87753-121.2243 18.0765-39.8316 45.96932-79.3366 94.63252-134.0508 7.16836-8.0511 28.51526-31.5969 28.65302-31.5969.051 0-1.11225 2.0153-2.57652 4.4694-12.65304 21.1938-23.47957 46.158-29.37751 67.7703-9.47448 34.6785-8.33163 64.4387 3.34693 87.5151 8.05611 15.898 21.86731 29.6684 37.3979 37.2806 27.18874 13.3214 66.9948 14.4235 115.60699 3.2245 3.34694-.7755 169.19363-44.801 368.55048-97.8366 199.35686-53.0408 362.49439-96.4029 362.51989-96.3672.056.046-463.16259 198.2599-703.62654 301.0914-38.08158 16.2806-48.26521 20.3928-66.16827 26.6785-45.76525 16.0714-86.76008 23.7398-119.89779 22.4235z"/></svg>
+        <p class="foot-disclaim">
+          Fan-made, non-commercial design showcase. Not affiliated with, endorsed by or an official
+          site of Nike, Inc. No products are sold here — no carts, no checkout, no prices.
+          Photography via Pexels. Built with hand-written WebGL.
+        </p>
+        <a class="foot-top-link" href="#top" data-cursor="hover">BACK TO THE DARK ↑</a>
+      </div>
+      <div class="foot-bottom">
+        <span>© SS26 COLLAGE SHOWCASE</span>
+        <span class="foot-mid">DARK → DAYLIGHT</span>
+        <span>MADE WITH GRAIN, TAPE &amp; WEBGL</span>
+      </div>
+    </footer>
+  </section>
+
+</main>
+
+<!-- ===== CUSTOM CURSOR ===== -->
+<div class="cursor" aria-hidden="true"><div class="cursor-dot"></div><div class="cursor-ring"></div></div>
+
+<script src="js/gl.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
